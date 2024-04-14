@@ -10,6 +10,8 @@ elevenlabs
 langchain-anthropic
 sentence_transformers
 replicate
+streamlit-mic-recorder
+streamlit-player
 
 #Depricated
 #dvc
