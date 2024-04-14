@@ -29,6 +29,7 @@ from langchain_community.llms import Replicate
 #from langchain.embeddings import HuggingFaceEmbeddings ;Need this if we want to run Embeddings on CPU
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.globals import set_verbose, set_debug
+from streamlit_mic_recorder import mic_recorder, speech_to_text
 
 # Importing Google Vertex
 #from langchain_google_vertexai import VertexAIModelGarden
@@ -208,7 +209,27 @@ if model == "claude-3-opus-20240229":
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
-        
+ 
+ # Voice Search
+state = st.session_state
+if 'text_received' not in state:
+    state.text_received = []
+text = speech_to_text(language='en', use_container_width=False, just_once=True, key='STT')
+if text:
+    state.text_received.append(text)
+    user_prompt = text
+
+    with st.chat_message("user"):
+        st.markdown(user_prompt)
+
+    with st.chat_message("assistant", avatar=assistant_logo):
+        message_placeholder = st.empty()
+        response = chain.invoke({"question": user_prompt})
+        message_placeholder.markdown(response['answer'])        
+    st.session_state.messages.append({"role": "assistant", "content": response['answer']})
+
+
+ # Text Search
 if user_prompt := st.chat_input("What is up?"):
     st.session_state.messages.append({"role": "user", "content": user_prompt})
     with st.chat_message("user"):
@@ -221,12 +242,7 @@ if user_prompt := st.chat_input("What is up?"):
     st.session_state.messages.append({"role": "assistant", "content": response['answer']})
 
 
-##Can't get ElevenLabs to work in Streamlit
-        #ElevelLabs API Call and Return
+ #ElevelLabs API Call and Return
         #text = str(response['answer'])
-        #audio = client2.generate(
-        #text=text,
-        #voice="Justin",
-        #model="eleven_multilingual_v2"
-        #)
+        #audio = client2.generate(text=text,voice="Justin",model="eleven_multilingual_v2")
         #play(audio)
