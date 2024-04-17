@@ -30,6 +30,8 @@ from langchain_community.llms import Replicate
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.globals import set_verbose, set_debug
 from streamlit_mic_recorder import mic_recorder, speech_to_text
+import base64
+import array
 
 # Importing Google Vertex
 #from langchain_google_vertexai import VertexAIModelGarden
