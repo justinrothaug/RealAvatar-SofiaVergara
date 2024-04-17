@@ -275,7 +275,7 @@ if user_prompt := st.chat_input("What is up?"):
                 
         #ElevelLabs API Call and Return
         text = str(response['answer'])
-        audio = client2.generate(text=text, voice="Sofia", model="eleven_turbo_v2")
+        audio = client2.generate(text=text, voice="Sofia", model="eleven_turbo_v2", accent="Mexican")
         # Create single bytes object from the returned generator.
         data = b"".join(audio)
         ##send data to audio tag in HTML
