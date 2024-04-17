@@ -67,7 +67,6 @@ with st.sidebar:
     st.markdown(video_html, unsafe_allow_html=True)
 
     # Voice Search Setup
-    st.markdown("# Voice to Text")   
     text = speech_to_text(language='en', use_container_width=True, just_once=True, key='STT')
     state = st.session_state
     if 'text_received' not in state:
