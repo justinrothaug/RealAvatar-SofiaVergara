@@ -50,11 +50,31 @@ chat= ChatOpenAI(openai_api_key= os.environ["OPENAI_API_KEY"])
 st.set_page_config(page_title="Sofia Vergara")
 assistant_logo = 'https://media.zenfs.com/en/shefinds_255/9feb1ca1273e3d3999cbd25b96c7f4c9'
 
-# Sidebar to select LLM
+#Set up the Video
+video_html = """
+<video controls width="250" autoplay="true" muted="true" loop="true">
+<source 
+            src="https://ugc-idle.s3-us-west-2.amazonaws.com/est_121d0db6ee223713f1279bdf2407e941.mp4" 
+            type="video/mp4" />
+</video>"""
+
+
+# Sidebar to select Options
 with st.sidebar:   
-    st.markdown("# Chat Options")
+    st.markdown("# Video Chat")
+    
+    #Add Video Player
+    st.markdown(video_html, unsafe_allow_html=True)
+    
+    # Voice Search Setup
+    text = speech_to_text(language='en', use_container_width=True, just_once=True, key='STT')
+    state = st.session_state
+    if 'text_received' not in state:
+        state.text_received = []
+        
+        
     # model names - https://platform.openai.com/docs/models/gpt-4-and-gpt-4-turbo
-    model = st.selectbox('What model would you like to use?',('claude-3-opus-20240229','gpt-4-turbo','llama-2-70b-chat'))
+    model = st.selectbox('What model would you like to use?',('gpt-4-turbo','claude-3-opus-20240229', 'llama-2-70b-chat'))
 
 
 # Define our Prompt for GPT
@@ -187,14 +207,8 @@ chain_Llama = get_chatassistant_chain_Llama()
 #nateraw/nous-hermes-2-solar-10.7b:1e918ab6ffd5872c21fba21a511f344fd12ac0edff6302c9cd260395c7707ff4
 
 
-col1, col2 = st.columns([1, 1])
-video_html = """
-<video controls width="250" autoplay="true" muted="true" loop="true">
-<source 
-            src="https://ugc-idle.s3-us-west-2.amazonaws.com/est_121d0db6ee223713f1279bdf2407e941.mp4" 
-            type="video/mp4" />
-</video>"""
-col2.markdown(video_html, unsafe_allow_html=True)
+
+
 
 # Chat Mode
 #Intro and set-up the Chat History
