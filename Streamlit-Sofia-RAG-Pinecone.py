@@ -233,10 +233,6 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
  
  # Voice Search
-state = st.session_state
-if 'text_received' not in state:
-    state.text_received = []
-text = speech_to_text(language='en', use_container_width=False, just_once=True, key='STT')
 if text:
     state.text_received.append(text)
     user_prompt = text
