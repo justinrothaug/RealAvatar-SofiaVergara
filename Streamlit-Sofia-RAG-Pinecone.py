@@ -45,6 +45,8 @@ REPLICATE_API_TOKEN= os.environ['REPLICATE_API_TOKEN']
 OPENAI_API_KEY= os.environ["OPENAI_API_KEY"]
 client= OpenAI(api_key= os.environ["OPENAI_API_KEY"])
 chat= ChatOpenAI(openai_api_key= os.environ["OPENAI_API_KEY"])
+ELEVEN_LABS_API_KEY= os.environ["ELEVEN_LABS_API_KEY"]
+client2= ElevenLabs(api_key= os.environ["ELEVEN_LABS_API_KEY"])
 
 #Set up the Environment
 st.set_page_config(page_title="Sofia Vergara")
@@ -243,7 +245,18 @@ if text:
     with st.chat_message("assistant", avatar=assistant_logo):
         message_placeholder = st.empty()
         response = chain.invoke({"question": user_prompt})
-        message_placeholder.markdown(response['answer'])        
+        message_placeholder.markdown(response['answer'])  
+
+        #ElevelLabs API Call and Return
+        text = str(response['answer'])
+        audio = client2.generate(text=text, voice="Sofia", model="eleven_turbo_v2")
+        # Create single bytes object from the returned generator.
+        data = b"".join(audio)
+        ##send data to audio tag in HTML
+        audio_base64 = base64.b64encode(data).decode('utf-8')
+        audio_tag = f'<audio autoplay="true" src="data:audio/wav;base64,{audio_base64}">'     
+        st.markdown(audio_tag, unsafe_allow_html=True)
+                
     st.session_state.messages.append({"role": "assistant", "content": response['answer']})
 
 
@@ -256,11 +269,16 @@ if user_prompt := st.chat_input("What is up?"):
     with st.chat_message("assistant", avatar=assistant_logo):
         message_placeholder = st.empty()
         response = chain.invoke({"question": user_prompt})
-        message_placeholder.markdown(response['answer'])        
+        message_placeholder.markdown(response['answer']) 
+                
+        #ElevelLabs API Call and Return
+        text = str(response['answer'])
+        audio = client2.generate(text=text, voice="Sofia", model="eleven_turbo_v2")
+        # Create single bytes object from the returned generator.
+        data = b"".join(audio)
+        ##send data to audio tag in HTML
+        audio_base64 = base64.b64encode(data).decode('utf-8')
+        audio_tag = f'<audio autoplay="true" src="data:audio/wav;base64,{audio_base64}">'     
+        st.markdown(audio_tag, unsafe_allow_html=True)
+                
     st.session_state.messages.append({"role": "assistant", "content": response['answer']})
-
-
- #ElevelLabs API Call and Return
-        #text = str(response['answer'])
-        #audio = client2.generate(text=text,voice="Justin",model="eleven_multilingual_v2")
-        #play(audio)
