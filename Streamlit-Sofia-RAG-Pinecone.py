@@ -78,7 +78,7 @@ with st.sidebar:
         
         
     # model names - https://platform.openai.com/docs/models/gpt-4-and-gpt-4-turbo
-    model = st.selectbox('What model would you like to use?',('gpt-4-turbo','claude-3-opus-20240229', 'llama-2-70b-chat'))
+    model = st.selectbox('What model would you like to use?',('claude-3-opus-20240229','gpt-4-turbo'))
 
 
 # Define our Prompt for GPT
