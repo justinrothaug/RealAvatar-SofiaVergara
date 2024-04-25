@@ -205,7 +205,7 @@ chain = get_chatassistant_chain()
 #Llama
 def get_chatassistant_chain_Llama():
     embeddings = OpenAIEmbeddings()
-    vectorstore = PineconeVectorStore(index_name="justinai", embedding=embeddings)
+    vectorstore = PineconeVectorStore(index_name="001-realavatar-sofia", embedding=embeddings)
     set_debug(True)
     llm_Llama = ChatPerplexity(temperature=.8, pplx_api_key=PPLX_API_KEY, model="llama-3-70b-instruct")
     chain_Llama=ConversationalRetrievalChain.from_llm(llm=llm_Llama, retriever=vectorstore.as_retriever(),memory=memory, combine_docs_chain_kwargs={"prompt": Prompt_Llama})
@@ -215,7 +215,7 @@ chain_Llama = get_chatassistant_chain_Llama()
 #Mixtral
 def get_chatassistant_chain_GPT_PPX():
     embeddings = OpenAIEmbeddings()
-    vectorstore = PineconeVectorStore(index_name="justinai", embedding=embeddings)
+    vectorstore = PineconeVectorStore(index_name="001-realavatar-sofia", embedding=embeddings)
     set_debug(True)
     llm_GPT_PPX = ChatPerplexity(temperature=.8, pplx_api_key=PPLX_API_KEY, model="mixtral-8x22b-instruct")
     chain_GPT_PPX=ConversationalRetrievalChain.from_llm(llm=llm_GPT_PPX, retriever=vectorstore.as_retriever(),memory=memory, combine_docs_chain_kwargs={"prompt": Prompt_Llama})
