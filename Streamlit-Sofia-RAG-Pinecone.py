@@ -83,7 +83,7 @@ with st.sidebar:
         
         
     # model names - https://platform.openai.com/docs/models/gpt-4-and-gpt-4-turbo
-    model = st.selectbox('What model would you like to use?',('claude-3-opus-20240229','gpt-4-turbo'))
+    model = st.selectbox('What model would you like to use?',('claude-3-opus-20240229','llama-3-70b-instruct','gpt-4-turbo', 'mixtral-8x22b-instruct'))
 
 
 # Define our Prompt for GPT
@@ -205,16 +205,22 @@ chain = get_chatassistant_chain()
 #Llama
 def get_chatassistant_chain_Llama():
     embeddings = OpenAIEmbeddings()
-    vectorstore_Llama = PineconeVectorStore(index_name="001-realavatar-sofia", embedding=embeddings)
+    vectorstore = PineconeVectorStore(index_name="justinai", embedding=embeddings)
     set_debug(True)
-    llm_Llama = Replicate(model="meta/llama-2-70b-chat:2d19859030ff705a87c746f7e96eea03aefb71f166725aee39692f1476566d48",model_kwargs={"max_length":500,"max_new_tokens": 500, "temperature": 1, "top_p": 1, "max_retries": 1})
-    chain_Llama=ConversationalRetrievalChain.from_llm(llm=llm_Llama, retriever=vectorstore_Llama.as_retriever(),memory=ConversationBufferMemory(memory_key="chat_history"),combine_docs_chain_kwargs={"prompt": Prompt_Llama}, max_tokens_limit=3000)
+    llm_Llama = ChatPerplexity(temperature=.8, pplx_api_key=PPLX_API_KEY, model="llama-3-70b-instruct")
+    chain_Llama=ConversationalRetrievalChain.from_llm(llm=llm_Llama, retriever=vectorstore.as_retriever(),memory=memory, combine_docs_chain_kwargs={"prompt": Prompt_Llama})
     return chain_Llama
 chain_Llama = get_chatassistant_chain_Llama()
-#Here's a few different Open Source models we can swap out from Replica if we want:
-#meta/llama-2-70b-chat:2d19859030ff705a87c746f7e96eea03aefb71f166725aee39692f1476566d48
-#mistralai/mixtral-8x7b-instruct-v0.1:cf18decbf51c27fed6bbdc3492312c1c903222a56e3fe9ca02d6cbe5198afc10
-#nateraw/nous-hermes-2-solar-10.7b:1e918ab6ffd5872c21fba21a511f344fd12ac0edff6302c9cd260395c7707ff4
+
+#Mixtral
+def get_chatassistant_chain_GPT_PPX():
+    embeddings = OpenAIEmbeddings()
+    vectorstore = PineconeVectorStore(index_name="justinai", embedding=embeddings)
+    set_debug(True)
+    llm_GPT_PPX = ChatPerplexity(temperature=.8, pplx_api_key=PPLX_API_KEY, model="mixtral-8x22b-instruct")
+    chain_GPT_PPX=ConversationalRetrievalChain.from_llm(llm=llm_GPT_PPX, retriever=vectorstore.as_retriever(),memory=memory, combine_docs_chain_kwargs={"prompt": Prompt_Llama})
+    return chain_GPT_PPX
+chain_GPT_PPX = get_chatassistant_chain_GPT_PPX()
 
 
 
@@ -230,12 +236,14 @@ if len(msgs.messages) == 0 or st.sidebar.button("Clear message history"):
     msgs.clear()
 
 #Define what chain to run based on the model selected
-if model == "llama-2-70b-chat":
-    chain=chain_Llama
-if model == "gpt-4-turbo":
-    chain=chain_GPT
 if model == "claude-3-opus-20240229":
     chain=chain
+if model == "gpt-4-turbo":
+    chain=chain_GPT
+if model == "llama-3-70b-instruct":
+    chain=chain_Llama
+if model == "mixtral-8x22b-instruct":
+    chain=chain_GPT_PPX
 
 #Start Chat and Response
 for message in st.session_state.messages:
