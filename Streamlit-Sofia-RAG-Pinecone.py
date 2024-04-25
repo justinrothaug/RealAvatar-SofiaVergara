@@ -1,5 +1,5 @@
 import os
-#from dotenv import load_dotenv
+from dotenv import load_dotenv
 import streamlit as st
 # Importing OpenAI
 from openai import OpenAI
@@ -13,9 +13,11 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain.memory.chat_message_histories import StreamlitChatMessageHistory
 from langchain.memory import ConversationBufferMemory
 from langchain_community.callbacks import get_openai_callback
-# Importing Eleven Labs
+# Importing Eleven Labs and HTML Audio
 from elevenlabs.client import ElevenLabs
 from elevenlabs import play
+import base64
+import array
 # Importing Pinecone
 from langchain.vectorstores.pinecone import Pinecone
 from langchain_pinecone import PineconeVectorStore
@@ -23,22 +25,23 @@ from pinecone import Pinecone
 # Importing Claude
 from langchain_anthropic import ChatAnthropic
 from anthropic import Anthropic
+import re
 # Importing Replicate
-from langchain_community.llms import CTransformers
-from langchain_community.llms import Replicate
+#from langchain_community.llms import CTransformers
+#from langchain_community.llms import Replicate
+# Importing Perplexity
+from langchain_community.chat_models import ChatPerplexity
+from langchain_core.prompts import ChatPromptTemplate
 #from langchain.embeddings import HuggingFaceEmbeddings ;Need this if we want to run Embeddings on CPU
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.globals import set_verbose, set_debug
 from streamlit_mic_recorder import mic_recorder, speech_to_text
-import base64
-import array
-import re
 
 # Importing Google Vertex
 #from langchain_google_vertexai import VertexAIModelGarden
 
 # Set the path as environment variable
-os.environ['PATH'] = 'C://Users//HP//Desktop'
+#os.environ['PATH'] = 'C://Users//HP//Desktop'
 
 #Add Keys
 CLAUDE_API_KEY= os.environ['CLAUDE_API_KEY']
@@ -50,6 +53,7 @@ client= OpenAI(api_key= os.environ["OPENAI_API_KEY"])
 chat= ChatOpenAI(openai_api_key= os.environ["OPENAI_API_KEY"])
 ELEVEN_LABS_API_KEY= os.environ["ELEVEN_LABS_API_KEY"]
 client2= ElevenLabs(api_key= os.environ["ELEVEN_LABS_API_KEY"])
+PPLX_API_KEY= os.environ['PPLX_API_KEY']
 
 #Set up the Environment
 st.set_page_config(page_title="Sofia Vergara")
