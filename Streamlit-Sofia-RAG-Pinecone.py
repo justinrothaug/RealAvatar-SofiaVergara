@@ -47,7 +47,7 @@ from streamlit_mic_recorder import mic_recorder, speech_to_text
 CLAUDE_API_KEY= os.environ['CLAUDE_API_KEY']
 api_key= os.environ['CLAUDE_API_KEY']
 PINECONE_API_KEY= os.environ['PINECONE_API_KEY']
-REPLICATE_API_TOKEN= os.environ['REPLICATE_API_TOKEN']
+#REPLICATE_API_TOKEN= os.environ['REPLICATE_API_TOKEN']
 OPENAI_API_KEY= os.environ["OPENAI_API_KEY"]
 client= OpenAI(api_key= os.environ["OPENAI_API_KEY"])
 chat= ChatOpenAI(openai_api_key= os.environ["OPENAI_API_KEY"])
