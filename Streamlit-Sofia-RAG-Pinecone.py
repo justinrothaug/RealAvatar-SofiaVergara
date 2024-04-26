@@ -197,7 +197,8 @@ def get_chatassistant_chain():
     embeddings = OpenAIEmbeddings()
     vectorstore = PineconeVectorStore(index_name="001-realavatar-sofia", embedding=embeddings)
     set_debug(True)
-    llm = ChatAnthropic(temperature=0, anthropic_api_key=api_key, model_name="claude-3-opus-20240229", model_kwargs=dict(system=claude_prompt_template))
+    llm = ChatAnthropic(temperature=0, anthropic_api_key=api_key, model_name="claude-3-haiku-20240307", model_kwargs=dict(system=claude_prompt_template))
+    #llm = ChatAnthropic(temperature=0, anthropic_api_key=api_key, model_name="claude-3-opus-20240229", model_kwargs=dict(system=claude_prompt_template))
     chain=ConversationalRetrievalChain.from_llm(llm=llm, retriever=vectorstore.as_retriever(), memory=memory)
     return chain
 chain = get_chatassistant_chain()
